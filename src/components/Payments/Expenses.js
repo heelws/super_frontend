@@ -5,17 +5,21 @@ import Card from "../UI/Card";
 import "./Expenses.css";
 
 const Expenses = (props) => {
-	return (
-		<Card className="expenses">
-			{props.items.map((item) => (
-				<ExpenseItem
-					title={item.title}
-					amount={item.amount}
-					date={item.date}
-				/>
-			))}
-		</Card>
-	);
+  return (
+    <Card className="expenses">
+      {props.items.map((item, index) => (
+        <ExpenseItem
+          key={item.id}
+          id={item.id}
+          index={index}
+          title={item.title}
+          amount={item.amount}
+          date={item.date}
+          deleteExpenseItem={props.deleteExpenseItem}
+        />
+      ))}
+    </Card>
+  );
 };
 
 export default Expenses;
