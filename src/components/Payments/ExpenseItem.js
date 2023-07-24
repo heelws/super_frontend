@@ -11,7 +11,13 @@ const ExpenseItem = (props) => {
       <div className="expense-item__description">
         <h2>{props.title}</h2>
         <div className="expense-item__price">${props.amount}</div>
-        <button onClick={() => props.deleteExpenseItem(props.index)}>
+        <div className="expenses-item__count">{props.count}</div>
+        <div className="expenses-item__email">{props.email}</div>
+        <div className="expenses-item__tel">{props.tel}</div>
+        <button
+          className="delete-button"
+          onClick={() => props.deleteExpenseItem(props.index)}
+        >
           delete
         </button>
       </div>

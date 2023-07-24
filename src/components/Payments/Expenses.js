@@ -15,6 +15,9 @@ const Expenses = (props) => {
           title={item.title}
           amount={item.amount}
           date={item.date}
+          count={item.count}
+          email={item.email}
+          tel={item.tel}
           deleteExpenseItem={props.deleteExpenseItem}
         />
       ))}

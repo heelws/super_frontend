@@ -10,18 +10,9 @@ function App() {
       title: "수건",
       amount: 12.33,
       date: new Date(2025, 8, 14),
-    },
-    {
-      id: "e2",
-      title: "화장품",
-      amount: 13.33,
-      date: new Date(2025, 8, 15),
-    },
-    {
-      id: "e3",
-      title: "바지",
-      amount: 14.33,
-      date: new Date(2025, 8, 16),
+      count: 1,
+      email: "super@super.com",
+      tel: "010-1111-2222",
     },
   ]);
 
@@ -35,6 +26,9 @@ function App() {
         title: data.name,
         amount: data.price,
         date: new Date(data.today),
+        count: data.count,
+        email: data.email,
+        tel: data.tel,
       },
       ...expenses, // 배열을 스프레드 연산자로 여러개가 있는 경우 요소들을 하나하나 처리할 수 있도록
     ]);
@@ -44,8 +38,8 @@ function App() {
   const deleteExpenseItem = (index) => {
     //filter,slice는 array 메서드
     //1. filter : 주어진 함수의 테스트를 통과하는 모든 요소를 모아 새로운 배열로 반환, id값 사용
-    const newFilteredArray = expenses.filter((item) => item.id !== id); // 해당 id값이 아닌 것들만 filter를 해서 볼 수 있게
-    setExpenses(newFilteredArray);
+    // const newFilteredArray = expenses.filter((item) => item.id !== id); // 해당 id값이 아닌 것들만 filter를 해서 볼 수 있게
+    // setExpenses(newFilteredArray);
     //2. slice : 어떤 배열의 시작부터 끝까지에 대한 얕은 복사본을 새로운 배열 객체로 반환, index값 사용
     //[0,1,2,3, ... , index, index+1, ... ,n-1]
     //[0,1,2,3, ... , index-1, index+1, ... ,n-1]
