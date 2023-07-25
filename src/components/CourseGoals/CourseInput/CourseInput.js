@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { styled } from "styled-components";
 
 import Button from "../../UI/Button/Button";
 import "./CourseInput.css";
@@ -28,21 +29,45 @@ const CourseInput = (props) => {
   // isValid가 아닐 때(빈 string일 때) invalid, 아닐 때는 빈 string
   return (
     <form onSubmit={formSubmitHandler}>
-      <div className={`form-control ${!isValid ? "invalid" : ""}`}>
-        <label>목표</label>
-        <input
+      <FormControl>
+        <FormControlLabel>목표</FormControlLabel>
+        <FormControlInput
           type="text"
           onChange={goalInputChangeHandler}
+          isValid={isValid}
           // 인라인 css
           // style={{
           //   backgroundColor: isValid ? "transparent" : "salmon",
           //   borderColor: isValid ? "#ccc" : "red",
           // }}
         />
-      </div>
+      </FormControl>
       <Button type="submit">목표 추가하기</Button>
     </form>
   );
 };
 
 export default CourseInput;
+//style이 된 component
+const FormControl = styled.div`
+  margin: 0.5rem 0;
+`;
+const FormControlLabel = styled.label`
+  font-weight: bold;
+  display: block;
+  margin-bottom: 0.5rem;
+`;
+const FormControlInput = styled.input`
+  display: block;
+  width: 100%;
+  border: 1px solid #ccc;
+  font: inherit;
+  line-height: 1.5rem;
+  padding: 0 0.25rem;
+  ${(props) =>
+    !props.isValid &&
+    `
+  background-color: salmon;
+  border-color: red;
+  `}
+`;
