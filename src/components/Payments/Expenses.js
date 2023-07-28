@@ -1,32 +1,41 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 
 import ExpenseItem from "./ExpenseItem";
 import Card from "../UI/Card";
 import "./Expenses.css";
-import ExpensesFilter from './ExpensesFilter';
+import ExpensesFilter from "./ExpensesFilter";
 
 const Expenses = (props) => {
-	const [filteredYear, setFilteredYear] = useState('2023');
+  const [filteredPrice, setFilteredPrice] = useState(150);
 
-	const filterChangeHandler = (selectedYear) => {
-		setFilteredYear(selectedYear);
-	};
+  const filterChangePrice = (selectedPrice) => {
+    setFilteredPrice(selectedPrice);
+  };
 
-	return (
-		<Card className="expenses">
-			<ExpensesFilter
-				selected={filteredYear}
-				onChangeFilter={filterChangeHandler}
-			/>
-			{props.items.map((item) => (
-				<ExpenseItem
-					title={item.title}
-					amount={item.amount}
-					date={item.date}
-				/>
-			))}
-		</Card>
-	);
+  const filteredExpenses = props.items.filter((expense) => {
+    return expense.amount >= 1 && expense.amount <= filteredPrice;
+  });
+
+  return (
+    <Card className="expenses">
+      <ExpensesFilter
+        selected={filteredPrice}
+        onChangeFilter={filterChangePrice}
+      />
+
+      {filteredExpenses.length > 0 ? (
+        filteredExpenses.map((item) => (
+          <ExpenseItem
+            title={item.title}
+            amount={item.amount}
+            date={item.date}
+          />
+        ))
+      ) : (
+        <p>값이 없습니다</p>
+      )}
+    </Card>
+  );
 };
 
 export default Expenses;
