@@ -1,12 +1,13 @@
 //useHttp.js
-import React, { useState } from "react";
-//요청을 보낼 때 들어가는 설정값 : requestConfig(+url,method,body,headers)
-//data를 적용해주는 함수 추가 : applyData
-const useHttp = (requsetConfig, applyData) => {
+import React, { useCallback, useState } from "react";
+
+const useHttp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  //모든 HTTP 요청을 보낼 때 쓸 수 있도록 수정
-  const sendRequest = async () => {
+
+  //useHttp 커스텀 훅 함수가 매번 호출이 될 때마다 매번 새롭게 생성 => 굳이 매번 생성될 필요가 있을까?
+  //requsetConfig, applyData는 안에서만 쓰이는 중 => 쓰이는 곳에서만 쓰이도록
+  const sendRequest = useCallback(async (requsetConfig, applyData) => {
     setIsLoading(true);
     setError(null);
     try {
@@ -21,14 +22,14 @@ const useHttp = (requsetConfig, applyData) => {
       }
 
       const data = await response.json();
-      //fetch는 data를 받아오고나서 return을 해주던지 적용해주는 함수 필요
+
       applyData(data);
     } catch (err) {
       setError(err.message || "Something went wrong!");
     }
     setIsLoading(false);
-  };
-  //커스텀 훅 사용하기 위해서는 return
+  }, []);
+
   return {
     isLoading,
     error,

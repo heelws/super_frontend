@@ -1,14 +1,15 @@
 //app.js
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import Tasks from "./components/Tasks/Tasks";
 import NewTask from "./components/NewTask/NewTask";
 import useHttp from "./hooks/useHttp";
 
+//state가 바뀌거나 props를 받을 일이 있을 때 렌더링 발생 => 렌더링 일어날 때마다 transformTasks도 매번 새롭게 함수 생성
 function App() {
   const [tasks, setTasks] = useState([]);
 
-  const transformTasks = (tasksObj) => {
+  const transformTasks = useCallback((tasksObj) => {
     const loadedTasks = [];
 
     for (const taskKey in tasksObj) {
@@ -16,21 +17,18 @@ function App() {
     }
 
     setTasks(loadedTasks);
-  };
+  }, []); //의존성 필요 X : tasksObj는 인자로 받고 있기 때문에
 
-  //applyData : fetch url을 통해 받아온 data를 setTasks를 통해서 useState 배열에 넣어주는 역할
-  const {
-    isLoading,
-    error,
-    sendRequest: fetchTasks, //useHttp에서 return한 함수는 sendRequest, App 컴포넌트에서는 fetchTasks이기 때문에 재명령
-  } = useHttp({
-    url: "https://react-test-63a0e-default-rtdb.firebaseio.com/tasks.json",
-    transformTasks,
-  });
+  const { isLoading, error, sendRequest: fetchTasks } = useHttp();
 
   useEffect(() => {
-    fetchTasks();
-  }, []);
+    fetchTasks(
+      {
+        url: "https://react-test-63a0e-default-rtdb.firebaseio.com/tasks.json",
+      },
+      transformTasks
+    );
+  }, [fetchTasks]); //받아오는 값은 의존성 필요, fetch 함수는 useHttp에서 생성된 것인데 안에 있는 내용이 바뀌게 될 수도 있음
 
   const taskAddHandler = (task) => {
     setTasks((prevTasks) => prevTasks.concat(task));
