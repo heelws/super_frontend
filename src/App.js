@@ -1,39 +1,32 @@
-import React, { useEffect, useState } from 'react';
+//app.js
+import React, { useEffect, useState } from "react";
 
-import Tasks from './components/Tasks/Tasks';
-import NewTask from './components/NewTask/NewTask';
+import Tasks from "./components/Tasks/Tasks";
+import NewTask from "./components/NewTask/NewTask";
+import useHttp from "./hooks/useHttp";
 
 function App() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [tasks, setTasks] = useState([]);
 
-  const fetchTasks = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(
-        'https://test-owen-f2913-default-rtdb.firebaseio.com//tasks.json'
-      );
+  const transformTasks = (tasksObj) => {
+    const loadedTasks = [];
 
-      if (!response.ok) {
-        throw new Error('Request failed!');
-      }
-
-      const data = await response.json();
-
-      const loadedTasks = [];
-
-      for (const taskKey in data) {
-        loadedTasks.push({ id: taskKey, text: data[taskKey].text });
-      }
-
-      setTasks(loadedTasks);
-    } catch (err) {
-      setError(err.message || 'Something went wrong!');
+    for (const taskKey in tasksObj) {
+      loadedTasks.push({ id: taskKey, text: tasksObj[taskKey].text });
     }
-    setIsLoading(false);
+
+    setTasks(loadedTasks);
   };
+
+  //applyData : fetch url을 통해 받아온 data를 setTasks를 통해서 useState 배열에 넣어주는 역할
+  const {
+    isLoading,
+    error,
+    sendRequest: fetchTasks, //useHttp에서 return한 함수는 sendRequest, App 컴포넌트에서는 fetchTasks이기 때문에 재명령
+  } = useHttp({
+    url: "https://react-test-63a0e-default-rtdb.firebaseio.com/tasks.json",
+    transformTasks,
+  });
 
   useEffect(() => {
     fetchTasks();
