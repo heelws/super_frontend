@@ -1,14 +1,19 @@
+//simpleInput practice/5_1
 import { useRef, useState } from "react";
 
 const SimpleInput = (props) => {
-  const nameInputRef = useRef(); //2
-  const [enteredName, setEnteredName] = useState(" "); //1
-  const [enterendNameIsValid, setEnteredNameIsValid] = useState(false); //4
-  const [enteredNameIsTouched, setenteredNameIsTouched] = useState(false); //5 처음 enteredName이 touch X => false
+  const nameInputRef = useRef();
+  const [enteredName, setEnteredName] = useState(" ");
+  const [enterendNameIsValid, setEnteredNameIsValid] = useState(false);
+  const [enteredNameIsTouched, setenteredNameIsTouched] = useState(false);
 
-  //input창의 값을 바꿀 때마다 그 값을 enteredName에 적절하게 변화 시켜주는 역할
   const nameInputChangeHandler = (event) => {
     setEnteredName(event.target.value);
+    setenteredNameIsTouched(true);
+
+    if (event.target.value.trim() === "") {
+      setEnteredNameIsValid(false);
+    } else setEnteredNameIsValid(true);
   };
 
   const formSubmitHandler = (event) => {
@@ -17,17 +22,26 @@ const SimpleInput = (props) => {
 
     setenteredNameIsTouched(true);
 
-    //3 enteredName이 빈 값인 경우 제출 안되게
+    // enteredName이 빈 값인 경우 제출 안되게
     if (enteredName.trim() === "") {
       console.log("submit fail");
       setEnteredNameIsValid(false);
       return;
     }
-    setEnteredNameIsValid(true); //enteredName이 값을 가지고 있다
+    setEnteredNameIsValid(true);
     setEnteredName("");
   };
 
-  //3 에러 메시지를 보여주는 경우, true -> 메시지 노출
+  const nameInputBluerHandler = (event) => {
+    console.log("event onBlur");
+    setenteredNameIsTouched(true);
+    if (enteredName.trim() === "") {
+      setEnteredNameIsValid(false);
+      return;
+    }
+  };
+
+  // 에러 메시지를 보여주는 경우, true -> 메시지 노출
   const nameInputIsInvalid = !enterendNameIsValid && enteredNameIsTouched;
 
   const nameInputClasses = nameInputIsInvalid
@@ -44,6 +58,8 @@ const SimpleInput = (props) => {
           ref={nameInputRef}
           value={enteredName}
           onChange={nameInputChangeHandler}
+          //form에 초점을 주고 잃을 때 판단할 수 있는 이벤트 리스너 : onBlur
+          onBlur={nameInputBluerHandler}
         />
         {nameInputIsInvalid && (
           <p className="error-text">이름값은 빈 값이 아니어야 합니다.</p> //4
